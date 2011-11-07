@@ -79,7 +79,19 @@ function addProduct(product) {
   productsById[product.id] = product;
 }
 
+window.currentUser = null;
 $(function() {
+  $.ajax({
+    url: "/user",
+    dataType: 'text',
+    success: function(data) {
+      currentUser = data;
+      var $view = $('#view_product_content');
+      if ($view.find('.contact[data-id]').attr('data-id') == data)
+        $view.find('.actions').removeClass('not-mine').addClass('mine');
+    },
+    error: function() { showError('Not logged in', 'You don\'t appear to be logged in'); }
+  });
   
   // Load categories if we need
   $('#list_categories_page').bind('pagebeforeshow',function(event, ui){
@@ -231,6 +243,9 @@ $(function() {
   });
   //Delete button
 	$('#remove_button').bind('click', function() {
+    if (! confirm("Really delete (cannot be undone)?"))
+      return false;
+
     var $form = $('#edit_product_content'),
         id = $form.find('.title').attr('data-id');
 

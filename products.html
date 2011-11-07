@@ -55,9 +55,9 @@
 <div data-role="page" id="add_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
-        <h1 class='head_title'>Add Product</h1>
-        <a id="add_button" href="#view_product_page" data-direction="reverse" data-icon="plus" data-theme="d">Add</a>
-    </div>
+    <h1 class='head_title'>Add Product</h1>
+    <a id="add_button" href="#view_product_page" data-direction="reverse" data-icon="plus" data-theme="d">Add</a>
+  </div>
 	<div id="add_product_content" data-role="content">
     <div class="product_form">
       <div data-role="fieldcontain">
@@ -93,7 +93,7 @@
     <h1 class="title">${title}</h1>
     <h4 class="price">${price}</h4>
     <h2>${description}</h2>
-    <div class="actions">
+    <div class="actions ${ (window.currentUser == $data.user_id) ? 'mine' : 'not-mine' }">
       <button class="contact" data-id="${user_id}">Email Seller</button>
       <a href="#edit_product_page&product_id=${id}" class="edit" data-id="${id}">Edit</a>
     </div>
@@ -106,9 +106,8 @@
 <div data-role="page" id="edit_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
-        <h1 class='head_title'>Edit Product</h1>
-        <a id="edit_button" href="#view_product_page" data-direction="reverse" data-icon="plus" data-theme="d">Save</a>
-    </div>
+    <h1 class='head_title'>Edit Product</h1>
+  </div>
   <script id="edit_product_template" type="text/x-jquery-tmpl">
     <h2 class="title" data-id=${id}>${title}</h2>
     <div data-role="fieldcontain">
@@ -129,8 +128,8 @@
         <option value="7">Miscellaneous</option>
       </select>
     </div>
-    <a href="#landing" id="remove_button">Delete (I cannot be undone)</a>
-    
+    <a id="edit_button" href="#view_product_page" data-role="button" data-direction="reverse" data-icon="plus" data-theme="d">Save</a>
+    <a href="#landing" id="remove_button" data-role="button" data-direction="reverse" data-icon="delete" data-theme="d">Delete</a>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

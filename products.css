@@ -1,1 +1,4 @@
 #error_message { color: #CD5555 }
+.actions * { display: none; }
+.actions.mine .edit { display: block; }
+.actions.not-mine .contact { display: block; }
