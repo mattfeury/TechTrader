@@ -1,3 +1,8 @@
+/**
+ * Ajax functions for loading things from the API and setting the appropriate templates
+ */
+
+// Categories array of {id, name} json objects
 var categoriesLoaded = false;
 function loadCategoriesIfNeeded() {
   if (categoriesLoaded) return false;
@@ -23,7 +28,7 @@ function loadCategoriesIfNeeded() {
     error: ajaxError
   });
 }
-
+// Loads a given product with id = id
 function loadProduct(id) {
   $( "#view_product_content" ).empty();    
   $.ajax({
@@ -37,14 +42,30 @@ function loadProduct(id) {
     error: ajaxError
   });
 }
+// Loads all the products from a category
+function loadProducts(catId) {
+  $( "#products_list" ).empty();
+  $.ajax({
+    url: "api/categories/" + catId,
+    dataType: "json",
+    async: false,
+    success: function(data) {
+      //Create The New Rows From Template
+      $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
+      $('#products_list').listview('refresh');
+    },
+    error: ajaxError
+  });
+}
 
 $(function() {
-  $('#landing_page').bind('pagebeforeshow',function(event, ui){
-  });
+  
+  // Load categories if we need
   $('#list_categories_page').bind('pagebeforeshow',function(event, ui){
     loadCategoriesIfNeeded();
     $('#categories_list').listview('refresh');
   });
+  
 	//Load categories before viewing add product page for the first time
 	$('#add_product_page').bind('pagebeforeshow', function() {
     loadCategoriesIfNeeded();
@@ -60,36 +81,24 @@ $(function() {
     if (! $('#view_product_content').children().length && idFromUrl)
       loadProduct(idFromUrl);
 	});
-  
-  
+  $('#list_products_page').bind('pagebeforeshow',function(event, ui){
+    // same nastiness as above
+    var idFromUrl = location.hash.split('=').pop();
+    if (! $('#products_list').children().length && idFromUrl)
+      loadProducts(idFromUrl);
+  });
 
   // Links to category pages should load the products
   // and populate the template
   $('a.category').live('click', function() {
-		$( "#products_list" ).empty();
-
-		//JQuery Fetch The New Ones
     var id = $(this).attr('data-id');
-		$.ajax({
-			url: "api/categories/" + id,
-			dataType: "json",
-      async: false,
-      success: function(data) {
-        //Create The New Rows From Template
-        $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
-    		$('#products_list').listview('refresh');
-      },
-      error: ajaxError
-		});
-
+    loadProducts(id);
   });
   
   // Links to product pages should load the product info
   // and populate the template
   $('a.product').live('click', function() {	
-		//JQuery Fetch The New Ones
     var pId = $(this).attr('data-id');
-
     loadProduct(pId);
   });
 
@@ -118,18 +127,12 @@ $(function() {
       success: function(data) {
         //reset form
         $form
-          .find('#add_product_title')
-            .val('')
-          .end()
-          .find('#add_product_description')
-            .val('')
-          .end()
-          .find('#add_product_price')
-            .val('')
-          .end()
-          .find('#add_product_categories')
-            .val('');
+          .find('#add_product_title').val('').end()
+          .find('#add_product_description').val('').end()
+          .find('#add_product_price').val('').end()
+          .find('#add_product_categories').val('');
 
+        //load the new product in the template since we redirect there
         loadProduct(data.productId);
       },
 	    error: ajaxError
