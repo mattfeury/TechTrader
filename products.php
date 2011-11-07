@@ -14,7 +14,7 @@
   }
 
   function listProducts($catId) {
-    $dbQuery = sprintf("SELECT * FROM products WHERE sold = '0' AND category_id = '%s' ORDER BY date_created DESC",
+    $dbQuery = sprintf("SELECT * FROM products WHERE category_id = '%s' ORDER BY date_created DESC",
       mysql_real_escape_string($catId));
 		$result = getDBResultsArray($dbQuery);
 		header("Content-type: application/json");
