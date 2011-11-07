@@ -189,7 +189,7 @@ $(function() {
        async: false, 
        success: function(xml) {
            var email = $(xml).find('mail').text();
-           var product_title = $(button).siblings('.title').text();
+           var product_title = $(button).parent().parent().parent().find('.title').text();
            var mailString = "mailto:" + email + "?subject=TechTrader:" + product_title +"&body=I am interested in your product.";
            setTimeout(function() {
              location.href=mailString;
