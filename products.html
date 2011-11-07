@@ -1,19 +1,16 @@
 <div data-role="page" id="landing_page">
     <div data-role='header' data-position='inline' data-theme='d'>
 	    <h1>Tech Trader</h1>
-        <a id='add_product_page_button' href='#add_product_page' data-transition="slide" data-icon="add" data-iconpos="notext" class="ui-btn-right"></a>
+      <a id='add_product_page_button' href='#add_product_page' data-transition="slide" data-icon="add" data-iconpos="notext" class="ui-btn-right"></a>
    	</div>
 	
-	<div id="content" data-role="content">
-    <a href='#list_categories_page' data-transition="slide">
-      <h1>Buy</h1>
-    </a>
-    <a href='#add_product_page' data-transition="slide">
-      <h1>Sell</h1>
-    </a>
-    <a href='#list_products_page' id="my_products_link" data-transition="slide">
-      <h1>My Products</h1>
-    </a>
+  <div id="content" data-role="content">
+    <div data-role="controlgroup">
+        <a href='#list_categories_page' data-role="button" data-transition="slide">Buy</a>
+        <a href='#add_product_page' data-role="button" data-transition="slide">Sell</a>
+        <a href='#list_products_page' id="my_products_link" data-role="button" data-transition="slide">My Products</a>
+    </div>
+
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -59,7 +56,6 @@
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
     <h1 class='head_title'>Add Product</h1>
-    <a id="add_button" href="#view_product_page" data-direction="reverse" data-icon="plus" data-theme="d">Add</a>
   </div>
 	<div id="add_product_content" data-role="content">
     <div class="product_form">
@@ -83,6 +79,7 @@
         </script>
 
       </div>
+      <a id="add_button" href="#view_product_page" data-role="button" data-direction="reverse" data-icon="plus" data-theme="d">Add</a>
     </div>
 	</div>
 </div>
