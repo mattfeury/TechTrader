@@ -21,6 +21,14 @@
     echo json_encode($result);
 	}
 	
+  function listUserProducts() {
+    $dbQuery = sprintf("SELECT * FROM products WHERE user_id = '%s' ORDER BY date_created DESC",
+      mysql_real_escape_string(idForCurrentUser()));
+		$result = getDBResultsArray($dbQuery);
+		header("Content-type: application/json");
+    echo json_encode($result);
+	}
+
   function getProduct($id) {
     $dbQuery = sprintf("SELECT * FROM products WHERE id = '%s'",
     mysql_real_escape_string($id));

@@ -14,6 +14,15 @@
     </index>
   </command>
 
+  <command id='user_product' security='protected'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index security='protected'>
+			<description><![CDATA[current user]]></description>
+			<action file='products.php'><![CDATA[listUserProducts();]]></action>
+    </index>
+  </command>
+
 	<command id='categories' security='public'>
 		<description><![CDATA[it's an API, bro]]></description>
 		
