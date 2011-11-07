@@ -54,7 +54,7 @@
 <!--******************************************************************************************************************************-->
 <div data-role="page" id="add_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
     <h1 class='head_title'>Add Product</h1>
   </div>
 	<div id="add_product_content" data-role="content">
@@ -86,16 +86,16 @@
 <!--******************************************************************************************************************************-->
 <div data-role="page" id="view_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
     <h1 class='head_title'>View Product</h1>
   </div>
   <script id="product_template" type="text/x-jquery-tmpl">
     <h1 class="title">${title}</h1>
     <h4 class="price">${price}</h4>
-    <h2>${description}</h2>
-    <div class="actions ${ (window.currentUser == $data.user_id) ? 'mine' : 'not-mine' }">
-      <button class="contact" data-id="${user_id}">Email Seller</button>
-      <a href="#edit_product_page&product_id=${id}" class="edit" data-id="${id}">Edit</a>
+    <span>Description:</span><h2>${description}</h2>
+    <div data-role="controlgroup" class="actions ${ (window.currentUser == $data.user_id) ? 'mine' : 'not-mine' }">
+      <button data-role="button" class="contact" data-id="${user_id}">Email Seller</button>
+      <a href="#edit_product_page&product_id=${id}" data-role="button" class="edit" data-id="${id}">Edit</a>
     </div>
   </script>
 
@@ -105,7 +105,7 @@
 <!--******************************************************************************************************************************-->
 <div data-role="page" id="edit_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d" data-iconpos="notext">Cancel</a>
     <h1 class='head_title'>Edit Product</h1>
   </div>
   <script id="edit_product_template" type="text/x-jquery-tmpl">

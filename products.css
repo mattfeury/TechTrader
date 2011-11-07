@@ -2,3 +2,4 @@
 .actions * { display: none; }
 .actions.mine .edit { display: block; }
 .actions.not-mine .contact { display: block; }
+.price:before { content: '$' }
