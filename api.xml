@@ -11,6 +11,16 @@
 			<description><![CDATA[current user]]></description>
 			
 			<action file='user.php'><![CDATA[jsonForCurrentUser();]]></action>
+    </index> 
+  </command>
+
+	<command id='categories' security='public'>
+		<description><![CDATA[it's an API, bro]]></description>
+		
+		<index>
+			<description><![CDATA[This is how you can get a listing of all categories]]></description>
+			
+			<action file='categories.php'><![CDATA[listCategories();]]></action>
     </index>
   </command>
 
@@ -29,19 +39,34 @@
 			<action file='products.php'><![CDATA[getProduct($_REST['product']);]]></action>
 		</get>
 		
-    <!--<post>
-			<description><![CDATA[This is how you can create a comment]]></description>
+    <post>
+			<description><![CDATA[This is how you can create a product]]></description>
 			
-			<action file='comments.php'><![CDATA[addComment($_POST['commentText']);]]></action>
+			<action file='products.php'><![CDATA[addProduct($_POST['title'], $_POST['description'], $_POST['price'], $_POST['categoryId']);]]></action>
 			
-			<param id='commentText'>
-				<description><![CDATA[Comment Text]]></description>
-				<defaultValue><![CDATA[some default comment text]]></defaultValue>
-				<exampleValue><![CDATA[some example commment text]]></exampleValue>
+			<param id='title'>
+				<description><![CDATA[Product title]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Algorithms by Dasgupta]]></exampleValue>
+			</param>
+			<param id='description'>
+				<description><![CDATA[Product description]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Textbook for CS 3510]]></exampleValue>
+			</param>
+			<param id='price'>
+				<description><![CDATA[Product price]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[$40]]></exampleValue>
+			</param>
+			<param id='categoryId'>
+				<description><![CDATA[Category Id (must match a uniqueId in the categories table)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>
 		</post>
 		
-		<put>
+    <!--<put>
 			<description><![CDATA[This is how you can update a comment]]></description>
 			
 			<action file='comments.php'><![CDATA[updateComment($_REST['comment'],$_POST['commentText']);]]></action>

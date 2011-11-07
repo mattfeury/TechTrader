@@ -1,4 +1,4 @@
-<div data-role="page" id="landing">
+<div data-role="page" id="landing_page">
     <div data-role='header' data-position='inline' data-theme='d'>
 	    <h1>Ev'ryday I'm tradin'</h1>
         <a id='add_product_page_button' href='#add_product_page' data-transition="slide" data-icon="add" data-iconpos="notext" class="ui-btn-right"></a>
@@ -7,6 +7,9 @@
 	<div id="content" data-role="content">
     <a href='#list_products_page' data-transition="slide">
       <h1>Buy</h1>
+    </a>
+    <a href='#add_product_page' data-transition="slide">
+      <h1>Sell</h1>
     </a>
 	</div>
 </div>
@@ -17,46 +20,65 @@
         <a id='add_product_page_button' href='#add_product_page' data-transition="slide" data-icon="add" data-iconpos="notext" class="ui-btn-right"></a>
    	</div>
 	
-	<div id="content" data-role="content">
+  <div id="content" data-role="content">
+    <script id="product_list_row_template" type="text/x-jquery-tmpl">
+      <li class="product_list_row" id="product_${id}">
+        <a href='#view_product_page&product_id=${id}' class='product' data-id='${id}' data-transition="slide">
+          <h1>${title}</h1>
+          <h4 class="price">${price}</h4>
+        </a>
+      </li>
+    </script>
+      
 		<ul id="products_list" data-role="listview" data-inset="true" data-filter="true" data-theme="c" data-divider-theme="b">
-			<script id="product_list_row_template" type="text/x-jquery-tmpl">
-				<li class="product_list_row" id="product_${id}">
-					<a href='#edit_product_page&product_id=${id}' data-transition="slide">
-            <h1>${name}</h1>
-            <h4>${description} <span class="price">${price}</span></h4>
-					</a>
-				</li>
-			</script>
 		</ul>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
 <div data-role="page" id="add_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
-		<a href="#list_products_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
         <h1 class='head_title'>Add Product</h1>
         <a id="add_button" href="#list_products_page" data-direction="reverse" data-icon="plus" data-theme="d">Add</a>
     </div>
 	<div id="add_product_content" data-role="content">
-		<div class="product_form">
-			<textarea rows="8" id="add_product_text"></textarea>
-        </div>
+    <div class="product_form">
+      <div data-role="fieldcontain">
+        <label>Title: <input type="text" id="add_product_title" name="add_product_title" /></label>
+      </div>
+      <div data-role="fieldcontain">
+        <label>Description: <input type="text" id="add_product_description" name="add_product_description" /></label>
+      </div>
+      <div data-role="fieldcontain">
+        <label>Price: <input type="text" id="add_product_price" name="add_product_price" /></label>
+      </div>
+
+      <div data-role="fieldcontain">
+        <label for="add_product_categories" class="select">Choose category:</label>
+        <select name="add_product_categories" id="add_product_categories">
+          <option value="7">Miscellaneous</option>
+        </select>
+        <script id="category_option_template" type="text/x-jquery-tmpl">
+          <option value="${id}">${name}</option>
+        </script>
+
+      </div>
+    </div>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
-<div data-role="page" id="edit_product_page">
+<div data-role="page" id="view_product_page">
 	<div data-role="header" data-position="inline" data-theme='d'>
 		<a href="#list_products_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
-        <h1 class='head_title'>Edit Product</h1>
-        <a id="save_button" href="#list_products_page" data-direction="reverse" data-icon="plus" data-theme="d">Save</a>
-    </div>
-	<div id="edit_product_content" data-role="content">		
-		<div class="product_form">
-			<textarea rows="8" id="edit_product_text"></textarea>
-        </div>
-		<center>
-			<a id='remove_button' href='#list_products_page' data-direction="reverse" data-role='button' data-inline="true" data-icon="minus">Remove product</a>
-		</center>
+    <h1 class='head_title'>View Product</h1>
+  </div>
+  <script id="product_template" type="text/x-jquery-tmpl">
+    <h1>${title}</h1>
+    <h4 class="price">${price}</h4>
+    <h2>${description}</h2>
+  </script>
+
+  <div id="view_product_content" data-role="content">	
 	</div>
 </div>
 <!--******************************************************************************************************************************-->
@@ -68,10 +90,8 @@
 		<script id="error_message_template" type="text/x-jquery-tmpl">
 			<div id="error_message">
 				<center>
-					<p>	An unexpected error occurred<br />
-						<span id="errorName">${errorName}</span><br />
-						<span id="errorDescription">${errorDescription}</span>
-					</p>
+            <div><h2 id="errorName">${errorName}</h2></div>
+						<div id="errorDescription">${errorDescription}</div>
 				</center>
 			</div>
 		</script>

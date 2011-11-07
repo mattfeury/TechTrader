@@ -1,6 +1,18 @@
 <?php
 	include 'db_helper.php';
-	
+
+  // helper
+  function idForCurrentUser() {
+    global $_USER;
+		$dbQuery = sprintf("SELECT * FROM users WHERE techId = '%s'",
+			mysql_real_escape_string($_USER['uid']));
+    $result=getDBResultRecord($dbQuery);
+
+    //TODO if it doesn't exist, then create ... or something
+    
+    return $result['id'];
+  }
+
 	function listProducts() {
 		$dbQuery = sprintf("SELECT * FROM products");
 		$result = getDBResultsArray($dbQuery);
@@ -16,16 +28,24 @@
 		echo json_encode($result);
 	}
 	
-	/*function addComment($comment) {
-		$dbQuery = sprintf("INSERT INTO comments (comment) VALUES ('%s')",
-			mysql_real_escape_string($comment));
+  function addProduct($title, $description, $price, $categoryId) {
+
+    $userId = idForCurrentUser();
+
+		$dbQuery = sprintf("INSERT INTO products (user_id, title, description, price, category_id) VALUES ('%s', '%s', '%s', '%s', '%s')",
+      mysql_real_escape_string($userId),
+      mysql_real_escape_string($title),
+      mysql_real_escape_string($description),
+      mysql_real_escape_string($price),
+      mysql_real_escape_string($categoryId));
 	
-		$result = getDBResultInserted($dbQuery,'personId');
+		$result = getDBResultInserted($dbQuery,'productId');
 		
 		header("Content-type: application/json");
-		echo json_encode($result);
-	}
-	
+    echo json_encode($result);
+  }
+
+	/*
 	function updateComment($id,$comment) {
 		$dbQuery = sprintf("UPDATE comments SET comment = '%s' WHERE id = '%s'",
 			mysql_real_escape_string($comment),
