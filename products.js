@@ -47,6 +47,7 @@ function loadProduct(id) {
       //Create The New Rows From Template
       addProduct(data);
       $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
+      $('#view_product_content').trigger('create');
     },
     error: ajaxError
   });

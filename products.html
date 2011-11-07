@@ -33,7 +33,7 @@
 <!--******************************************************************************************************************************-->
 <div data-role="page" id="list_products_page">
     <div data-role='header' data-position='inline' data-theme='d'>
-	    <h1>Product</h1>
+	    <h1>Products</h1>
         <a id='add_product_page_button' href='#add_product_page' data-transition="slide" data-icon="add" data-iconpos="notext" class="ui-btn-right"></a>
    	</div>
 	
@@ -92,8 +92,8 @@
   <script id="product_template" type="text/x-jquery-tmpl">
     <h1 class="title">${title}</h1>
     <h4 class="price">${price}</h4>
-    <span>Description:</span><h2>${description}</h2>
-    <div data-role="controlgroup" class="actions ${ (window.currentUser == $data.user_id) ? 'mine' : 'not-mine' }">
+    <h4>${description}</h4>
+    <div class="actions ${ (window.currentUser == $data.user_id) ? 'mine' : 'not-mine' }">
       <button data-role="button" class="contact" data-id="${user_id}">Email Seller</button>
       <a href="#edit_product_page&product_id=${id}" data-role="button" class="edit" data-id="${id}">Edit</a>
     </div>
