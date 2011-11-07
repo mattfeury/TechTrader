@@ -3,11 +3,12 @@
  */
 
 // Categories array of {id, name} json objects
-var categoriesLoaded = false;
+var categoriesLoaded = false,
+    categoriesById = {};
 function loadCategoriesIfNeeded() {
   if (categoriesLoaded) return false;
 
-  $('#add_product_categories, #categories_list').empty();
+  $('.add_product_categories, #categories_list').empty();
 
   $.ajax({
     url: "api/categories",
@@ -15,14 +16,21 @@ function loadCategoriesIfNeeded() {
     async: false,
     success: function(data) {
       categoriesLoaded = true;
-      
+
+      $.each(data, function(i, item) {
+        categoriesById[item.id] = item;
+      });
+
       // template on create product page
-      $( "#category_option_template" ).tmpl( data ).appendTo( "#add_product_categories" );
+      $( "#category_option_template" ).tmpl( data ).appendTo( ".add_product_categories" );
       // template on list categories page
       $( "#category_list_row_template" ).tmpl( data ).appendTo( "#categories_list" );
       setTimeout(function() {
-        var myselect = $("select#add_product_categories");
-        myselect[0].selectedIndex = 0;
+        var myselect = $("select.add_product_categories");
+
+        for(var i = 0; i < myselect.length; i++)
+          myselect[i].selectedIndex = 0;
+
       }, 0);
     },
     error: ajaxError
@@ -37,6 +45,7 @@ function loadProduct(id) {
     async: false,
     success: function(data, textStatus, jqXHR) {
       //Create The New Rows From Template
+      addProduct(data);
       $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
     },
     error: ajaxError
@@ -51,11 +60,23 @@ function loadProducts(catId) {
     async: false,
     success: function(data) {
       //Create The New Rows From Template
+      addProducts(data);
       $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
       $('#products_list').listview('refresh');
     },
     error: ajaxError
   });
+}
+
+//stores our loaded products so we can cache them and not call the db all the time
+var productsById = {};
+function addProducts(products) {
+  $.each(products, function(i, item) {
+    addProduct(item);
+  });
+}
+function addProduct(product) {
+  productsById[product.id] = product;
 }
 
 $(function() {
@@ -67,9 +88,9 @@ $(function() {
   });
   
 	//Load categories before viewing add product page for the first time
-	$('#add_product_page').bind('pagebeforeshow', function() {
+	$('#add_product_page, #edit_product_page').bind('pagebeforeshow', function() {
     loadCategoriesIfNeeded();
-    $('select#add_product_categories').selectmenu('refresh');
+    $(this).find('select.add_product_categories').selectmenu('refresh');
 	});
 
 	$('#view_product_page').bind('pagebeforeshow', function() {
@@ -88,6 +109,8 @@ $(function() {
       loadProducts(idFromUrl);
   });
 
+
+
   // Links to category pages should load the products
   // and populate the template
   $('a.category').live('click', function() {
@@ -102,9 +125,34 @@ $(function() {
     loadProduct(pId);
   });
 
+  // Links to edit product page should populate the template
+  // We already have the product cached
+  $('a.edit').live('click', function() {	
+    var pId = $(this).attr('data-id');
+    if (productsById[pId]) {
+      // Set the edit template with this product
+      $('#edit_product_content .product_form').empty();
+      $('#edit_product_template').tmpl( productsById[pId] ).appendTo('#edit_product_content .product_form');
+
+      // Select the right category
+      setTimeout(function() {
+        var myselect = $("#edit_product_content select");
+        var index = 0;
+        myselect.find('option').each(function(i, item) {
+          if ($(item).attr('value') == productsById[pId]['category_id'])
+            index = i;
+        });
+
+        myselect[0].selectedIndex = index;
+        myselect.selectmenu('refresh');
+      }, 0);
+    }
+  });
+
+
   //Listener for the mail button. Used to send the owner of an item an email.
-  $('.contact').live('click', function() {                                                                             
-    var button = this;                                                                                     
+  $('.contact').live('click', function() {
+    var button = this;
     $.ajax({
        url: "/proxy/iam-dev01.iam.gatech.edu/directory/people?attribute=uid&query=" + $(this).attr('data-id'),
        dataType: "xml",
@@ -118,19 +166,18 @@ $(function() {
            });
        },
        error: ajaxError
-   });
+    });
   });
 
 
 	//Handles the add product form
 	$('#add_button').bind('click', function() {
-		console.log("Add Button");
     var $form = $('#add_product_content'),
         data = {
           title: $form.find('#add_product_title').val(),
           description: $form.find('#add_product_description').val(),
           price: $form.find('#add_product_price').val(),
-          categoryId: $form.find('#add_product_categories').val()
+          categoryId: $form.find('.add_product_categories').val()
         };
 
     if (data.title.trim() === '') {
@@ -150,7 +197,7 @@ $(function() {
           .find('#add_product_title').val('').end()
           .find('#add_product_description').val('').end()
           .find('#add_product_price').val('').end()
-          .find('#add_product_categories').val('');
+          .find('.add_product_categories').val('');
 
         //load the new product in the template since we redirect there
         loadProduct(data.productId);
@@ -158,34 +205,43 @@ $(function() {
 	    error: ajaxError
 		});
 	});
-	/*
-	//Bind the edit page save button
-	$('#save_button').bind('click', function() {
-		console.log("Save Button");
-		var product_id = $.url().fparam("product_id");
+
+  //Handles the edit product form
+  $('#edit_button').bind('click', function() {
+    var $form = $('#edit_product_content'),
+        id = $form.find('.title').attr('data-id'),
+        data = {
+          description: $form.find('#edit_product_description').val(),
+          price: $form.find('#edit_product_price').val(),
+          categoryId: $form.find('.add_product_categories').val()
+        };
+    
+    $.ajax({
+      url: "api/product/" + id,
+      dataType: "json",
+      async: false,
+      data: data,
+      headers: {'X-HTTP-Method-Override': 'PUT'},
+      type: 'POST',
+      success: function(data) {
+        loadProduct(id);
+      },        
+      error: ajaxError
+		});
+  });
+  //Delete button
+	$('#remove_button').bind('click', function() {
+    var $form = $('#edit_product_content'),
+        id = $form.find('.title').attr('data-id');
+
 		$.ajax({
-			url: "api/product/"+product_id,
+			url: "api/product/"+id,
 			dataType: "json",
-	        async: false,
-			data: {'productText': $('#edit_product_text')[0].value},
-			headers: {'X-HTTP-Method-Override': 'PUT'},
-			type: 'POST',
-	        error: ajaxError
+	    async: false,
+			type: 'DELETE',
+	    error: ajaxError
 		});
 	});
-	
-	//Bind the edit page remove button
-	$('#remove_button').bind('click', function() {
-		console.log("Remove Button");
-		var product_id = $.url().fparam("product_id");
-		$.ajax({
-			url: "api/product/"+product_id,
-			dataType: "json",
-	        async: false,
-			type: 'DELETE',
-	        error: ajaxError
-		});
-	});*/
 
 });
 

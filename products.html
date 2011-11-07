@@ -72,7 +72,7 @@
 
       <div data-role="fieldcontain">
         <label for="add_product_categories" class="select">Choose category:</label>
-        <select name="add_product_categories" id="add_product_categories">
+        <select name="add_product_categories" class="add_product_categories">
           <option value="7">Miscellaneous</option>
         </select>
         <script id="category_option_template" type="text/x-jquery-tmpl">
@@ -93,10 +93,44 @@
     <h1 class="title">${title}</h1>
     <h4 class="price">${price}</h4>
     <h2>${description}</h2>
-    <button class="contact" data-id="${user_id}">Email Seller</button>
+    <div class="actions">
+      <button class="contact" data-id="${user_id}">Email Seller</button>
+      <a href="#edit_product_page&product_id=${id}" class="edit" data-id="${id}">Edit</a>
+    </div>
   </script>
 
   <div id="view_product_content" data-role="content">	
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="edit_product_page">
+	<div data-role="header" data-position="inline" data-theme='d'>
+		<a href="#landing_page" data-direction="reverse" data-icon="back" data-theme="d">Cancel</a>
+        <h1 class='head_title'>Edit Product</h1>
+        <a id="edit_button" href="#view_product_page" data-direction="reverse" data-icon="plus" data-theme="d">Save</a>
+    </div>
+  <script id="edit_product_template" type="text/x-jquery-tmpl">
+    <h2 class="title" data-id=${id}>${title}</h2>
+    <div data-role="fieldcontain">
+      <label>Description: <input type="text" id="edit_product_description" name="edit_product_description" value="${description}" /></label>
+    </div>
+    <div data-role="fieldcontain">
+      <label>Price: <input type="text" id="edit_product_price" name="edit_product_price" value="${price}" /></label>
+    </div>
+  </script>
+  <div id="edit_product_content" data-role="content">
+
+    <div class="product_form">
+    </div>
+    
+    <div data-role="fieldcontain">
+      <label for="add_product_categories" class="select">Choose category:</label>
+      <select name="add_product_categories" class="add_product_categories">
+        <option value="7">Miscellaneous</option>
+      </select>
+    </div>
+    <a href="#landing" id="remove_button">Delete (I cannot be undone)</a>
+    
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

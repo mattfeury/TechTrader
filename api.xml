@@ -71,22 +71,37 @@
 			</param>
 		</post>
 		
-    <!--<put>
-			<description><![CDATA[This is how you can update a comment]]></description>
+    <put>
+			<description><![CDATA[This is how you can update a product. Only the user who owns this product can update it]]></description>
 			
-			<action file='comments.php'><![CDATA[updateComment($_REST['comment'],$_POST['commentText']);]]></action>
+			<action file='products.php'><![CDATA[updateProduct($_REST['product'], $_POST['description'], $_POST['price'], $_POST['categoryId']);]]></action>
 			
-			<param id='commentText'>
-				<description><![CDATA[Comment Text To Update]]></description>
-				<defaultValue><![CDATA[some default comment text update]]></defaultValue>
-				<exampleValue><![CDATA[some example commment text update]]></exampleValue>
+			<param id='product-id'>
+				<description><![CDATA[Product ID (unique primary key)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
+			</param>
+			<param id='description'>
+				<description><![CDATA[Product description]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[Textbook for CS 3510]]></exampleValue>
+			</param>
+			<param id='price'>
+				<description><![CDATA[Product price]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[$40]]></exampleValue>
+			</param>
+			<param id='categoryId'>
+				<description><![CDATA[Category Id (must match a uniqueId in the categories table)]]></description>
+				<defaultValue><![CDATA[]]></defaultValue>
+				<exampleValue><![CDATA[1]]></exampleValue>
 			</param>
 		</put>
-		
+
 		<delete>
-			<description><![CDATA[This is how you can delete a comment]]></description>
+			<description><![CDATA[This is how you can delete a product. Only the user who owns this can call this]]></description>
 			
-			<action file='comments.php'><![CDATA[deleteComment($_REST['comment']);]]></action>
-    </delete>-->
+			<action file='products.php'><![CDATA[deleteProduct($_REST['product']);]]></action>
+    </delete>
 	</command>
 </api>
