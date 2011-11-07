@@ -24,6 +24,20 @@ function loadCategoriesIfNeeded() {
   });
 }
 
+function loadProduct(id) {
+  $( "#view_product_content" ).empty();    
+  $.ajax({
+    url: "api/product/" + id,
+    dataType: "json",
+    async: false,
+    success: function(data, textStatus, jqXHR) {
+      //Create The New Rows From Template
+      $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
+    },
+    error: ajaxError
+  });
+}
+
 $(function() {
   $('#landing_page').bind('pagebeforeshow',function(event, ui){
   });
@@ -36,6 +50,17 @@ $(function() {
     loadCategoriesIfNeeded();
     $('select#add_product_categories').selectmenu('refresh');
 	});
+
+	$('#view_product_page').bind('pagebeforeshow', function() {
+    //we can't always count on getting the id from the url since
+    //sometimes jQuery doesn't update it, so we mostly rely on the link clicked
+    //if, however, we navigate direct to the page, no link was clicked so we'll need
+    //to load from the url
+    var idFromUrl = location.hash.split('=').pop();
+    if (! $('#view_product_content').children().length && idFromUrl)
+      loadProduct(idFromUrl);
+	});
+  
   
 
   // Links to category pages should load the products
@@ -61,22 +86,11 @@ $(function() {
   
   // Links to product pages should load the product info
   // and populate the template
-  $('a.product').live('click', function() {
-		$( "#view_product_content" ).empty();
-		
+  $('a.product').live('click', function() {	
 		//JQuery Fetch The New Ones
     var pId = $(this).attr('data-id');
-		$.ajax({
-			url: "api/product/" + pId,
-			dataType: "json",
-      async: false,
-      success: function(data, textStatus, jqXHR) {
-        //Create The New Rows From Template
-        $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
-      },
-      error: ajaxError
-		});
 
+    loadProduct(pId);
   });
 
 	//Handles the add product form
@@ -101,7 +115,7 @@ $(function() {
 	    async: false,
 			data: data,
 			type: 'POST',
-      success: function() {
+      success: function(data) {
         //reset form
         $form
           .find('#add_product_title')
@@ -115,6 +129,8 @@ $(function() {
           .end()
           .find('#add_product_categories')
             .val('');
+
+        loadProduct(data.productId);
       },
 	    error: ajaxError
 		});
