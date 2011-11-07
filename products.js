@@ -1,30 +1,63 @@
-$(function() {
+var categoriesLoaded = false;
+function loadCategoriesIfNeeded() {
+  if (categoriesLoaded) return false;
 
-  $('#landing_page').bind('pagebeforeshow',function(event, ui){
-    
+  $('#add_product_categories, #categories_list').empty();
+
+  $.ajax({
+    url: "api/categories",
+    dataType: "json",
+    async: false,
+    success: function(data) {
+      categoriesLoaded = true;
+      
+      // template on create product page
+      $( "#category_option_template" ).tmpl( data ).appendTo( "#add_product_categories" );
+      // template on list categories page
+      $( "#category_list_row_template" ).tmpl( data ).appendTo( "#categories_list" );
+      setTimeout(function() {
+        var myselect = $("select#add_product_categories");
+        myselect[0].selectedIndex = 0;
+      }, 0);
+    },
+    error: ajaxError
   });
+}
 
-  // List all products
-  $('#list_products_page').bind('pagebeforeshow',function(event, ui){
-		console.log('pagebeforeshow');
-	
-		//Remove the old rows
-		$( "#products_list" ).empty();
-		
-		//JQuery Fetch The New Ones
-		$.ajax({
-			url: "api/product",
-			dataType: "json",
-	        async: false,
-	        success: function(data, textStatus, jqXHR) {
-	        	//Create The New Rows From Template
-	        	$( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
-	        },
-	        error: ajaxError
-		});
-		
-		$('#products_list').listview('refresh');
+$(function() {
+  $('#landing_page').bind('pagebeforeshow',function(event, ui){
+  });
+  $('#list_categories_page').bind('pagebeforeshow',function(event, ui){
+    loadCategoriesIfNeeded();
+    $('#categories_list').listview('refresh');
+  });
+	//Load categories before viewing add product page for the first time
+	$('#add_product_page').bind('pagebeforeshow', function() {
+    loadCategoriesIfNeeded();
+    $('select#add_product_categories').selectmenu('refresh');
 	});
+  
+
+  // Links to category pages should load the products
+  // and populate the template
+  $('a.category').live('click', function() {
+		$( "#products_list" ).empty();
+
+		//JQuery Fetch The New Ones
+    var id = $(this).attr('data-id');
+		$.ajax({
+			url: "api/categories/" + id,
+			dataType: "json",
+      async: false,
+      success: function(data) {
+        //Create The New Rows From Template
+        $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
+    		$('#products_list').listview('refresh');
+      },
+      error: ajaxError
+		});
+
+  });
   
   // Links to product pages should load the product info
   // and populate the template
@@ -36,46 +69,17 @@ $(function() {
 		$.ajax({
 			url: "api/product/" + pId,
 			dataType: "json",
-	        async: false,
-	        success: function(data, textStatus, jqXHR) {
-	        	//Create The New Rows From Template
-	        	$( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
-	        },
-	        error: ajaxError
+      async: false,
+      success: function(data, textStatus, jqXHR) {
+        //Create The New Rows From Template
+        $( "#product_template" ).tmpl( data ).appendTo( "#view_product_content" );
+      },
+      error: ajaxError
 		});
 
   });
 
-  $('#view_product_page').bind('pagebeforeshow',function(event, ui){
-		//Remove the old rows
-	  console.log("showin prod");	
-		//$('#products_list').listview('refresh');
-	});
-	
-	//Load categories before viewing add product page for the first time
-  var categoriesLoaded = false;
-	$('#add_product_page').bind('pagebeforeshow', function() {
-
-    if (categoriesLoaded) return false;
-
-    $('#add_product_categories').empty();
-
-		$.ajax({
-			url: "api/categories",
-			dataType: "json",
-	    async: false,
-      success: function(data) {
-	      $( "#category_option_template" ).tmpl( data ).appendTo( "#add_product_categories" );
-        categoriesLoaded = true;
-        var myselect = $("select#add_product_categories");
-        myselect[0].selectedIndex = 0;
-        myselect.selectmenu("refresh");
-      },
-	    error: ajaxError
-		});    
-	});
-
-	//Bind the add page button
+	//Handles the add product form
 	$('#add_button').bind('click', function() {
 		console.log("Add Button");
     var $form = $('#add_product_content'),
@@ -143,12 +147,6 @@ $(function() {
 	        error: ajaxError
 		});
 	});*/
-	
-	//Cleanup of URL so we can have better client URL support
-	$('#edit_product_page').bind('pagehide', function() {
-		$(this).attr("data-url",$(this).attr("id"));
-		delete $(this).data()['url'];
-	});
 
 });
 

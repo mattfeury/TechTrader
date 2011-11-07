@@ -5,12 +5,29 @@
    	</div>
 	
 	<div id="content" data-role="content">
-    <a href='#list_products_page' data-transition="slide">
+    <a href='#list_categories_page' data-transition="slide">
       <h1>Buy</h1>
     </a>
     <a href='#add_product_page' data-transition="slide">
       <h1>Sell</h1>
     </a>
+	</div>
+</div>
+<!--******************************************************************************************************************************-->
+<div data-role="page" id="list_categories_page">
+    <div data-role='header' data-position='inline' data-theme='d'>
+	    <h1>Choose a Category</h1>
+   	</div>
+	
+  <div id="content" data-role="content">
+    <script id="category_list_row_template" type="text/x-jquery-tmpl">
+      <li class="category_list_row" id="category_${id}">
+        <a href='#list_products_page&category_id=${id}' class='category' data-id='${id}' data-transition="slide">${name}</a>
+      </li>
+    </script>
+      
+		<ul id="categories_list" data-role="listview" data-inset="true" data-filter="false" data-theme="c" data-divider-theme="b">
+		</ul>
 	</div>
 </div>
 <!--******************************************************************************************************************************-->

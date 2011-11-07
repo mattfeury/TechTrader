@@ -13,11 +13,12 @@
     return $result['id'];
   }
 
-	function listProducts() {
-		$dbQuery = sprintf("SELECT * FROM products");
+  function listProducts($catId) {
+    $dbQuery = sprintf("SELECT * FROM products WHERE category_id = '%s'",
+      mysql_real_escape_string($catId));
 		$result = getDBResultsArray($dbQuery);
 		header("Content-type: application/json");
-		echo json_encode($result);
+    echo json_encode($result);
 	}
 	
 	function getProduct($id) {

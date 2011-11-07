@@ -11,7 +11,7 @@
 			<description><![CDATA[current user]]></description>
 			
 			<action file='user.php'><![CDATA[jsonForCurrentUser();]]></action>
-    </index> 
+    </index>
   </command>
 
 	<command id='categories' security='public'>
@@ -22,6 +22,11 @@
 			
 			<action file='categories.php'><![CDATA[listCategories();]]></action>
     </index>
+		<get>
+			<description><![CDATA[This is how you can get a specific list of products per category]]></description>
+			
+			<action file='products.php'><![CDATA[listProducts($_REST['categories']);]]></action>
+		</get>        
   </command>
 
 	<command id='product' security='public'>
