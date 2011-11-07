@@ -58,6 +58,22 @@ function loadProducts(catId) {
   });
 }
 
+// Loads all the products for the user
+function loadUserProducts() {
+  $( "#products_list" ).empty();
+  $.ajax({
+    url: "api/user_product",
+    dataType: "json",
+    async: false,
+    success: function(data) {
+      //Create The New Rows From Template
+      $( "#product_list_row_template" ).tmpl( data ).appendTo( "#products_list" );
+      $('#products_list').listview('refresh');
+    },
+    error: function() { showError('No Products','You have not posted any products up!'); }
+  });
+}
+
 $(function() {
   
   // Load categories if we need
@@ -120,6 +136,10 @@ $(function() {
    });
   });
 
+  //Listener for the mail button. Used to send the owner of an item an email.
+  $('#my_products_link').live('click', function() {                                                                             
+      loadUserProducts();
+  });
 
 	//Handles the add product form
 	$('#add_button').bind('click', function() {
@@ -194,6 +214,7 @@ function ajaxError(jqXHR, textStatus, errorThrown){
 	console.log('ajaxError '+textStatus+' '+errorThrown);
 	showError(textStatus, errorThrown);
 }
+
 function showError(name, description) {
 	$('#error_message').remove();
 	$("#error_message_template").tmpl( {errorName: name, errorDescription: description} ).appendTo( "#error_dialog_content" );
