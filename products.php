@@ -4,17 +4,11 @@
   // helper
   function idForCurrentUser() {
     global $_USER;
-		$dbQuery = sprintf("SELECT * FROM users WHERE techId = '%s'",
-			mysql_real_escape_string($_USER['uid']));
-    $result=getDBResultRecord($dbQuery);
-
-    //TODO if it doesn't exist, then create ... or something
-    
-    return $result['id'];
+    return $_USER['uid'];
   }
 
   function listProducts($catId) {
-    $dbQuery = sprintf("SELECT * FROM products WHERE category_id = '%s'",
+    $dbQuery = sprintf("SELECT * FROM products WHERE category_id = '%s' ORDER BY date_created DESC",
       mysql_real_escape_string($catId));
 		$result = getDBResultsArray($dbQuery);
 		header("Content-type: application/json");
