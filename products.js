@@ -93,6 +93,25 @@ $(function() {
     loadProduct(pId);
   });
 
+  //Listener for the mail button. Used to send the owner of an item an email.
+  $('.contact').live('click', function() {                                                                             
+    var button = this;                                                                                     
+    $.ajax({
+        url: "/proxy/iam-dev01.iam.gatech.edu/directory/people?attribute=uid&query=" +                
+             $(this).attr('data-id'),
+             dataType: "xml",
+             async: false, 
+             success: function(xml) {                                                                 
+                 var email = $(xml).find('mail').text();                                                        
+                 var product_title = $(button).siblings('.title').text();                                       
+                 var mailString = "mailto:" + email + "?subject=TechTrader:" + product_title +"&body=I am interested in your product."   
+                 loction.href=mailString;                                                                               
+             },
+             error: ajaxError
+   });
+  });
+
+
 	//Handles the add product form
 	$('#add_button').bind('click', function() {
 		console.log("Add Button");
