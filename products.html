@@ -41,8 +41,9 @@
     <script id="product_list_row_template" type="text/x-jquery-tmpl">
       <li class="product_list_row" id="product_${id}">
         <a href='#view_product_page&product_id=${id}' class='product' data-id='${id}' data-transition="slide">
-          <h1>${title}</h1>
+          <h1 class="title">${title}</h1>
           <h4 class="price">${price}</h4>
+          <button class="contact" data-id="${techId}"> Contact ${techId} </button>
         </a>
       </li>
     </script>

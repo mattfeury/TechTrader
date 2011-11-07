@@ -15,13 +15,13 @@
     echo json_encode($result);
 	}
 	
-	function getProduct($id) {
-		$dbQuery = sprintf("SELECT * FROM products WHERE id = '%s'",
-			mysql_real_escape_string($id));
-		$result=getDBResultRecord($dbQuery);
-		header("Content-type: application/json");
-		echo json_encode($result);
-	}
+  function getProduct($id) {
+    $dbQuery = sprintf("SELECT title, user_id, price, description FROM products WHERE id = '%s'",
+    mysql_real_escape_string($id));
+    $result=getDBResultRecord($dbQuery);
+    header("Content-type: application/json");
+    echo json_encode($result);
+  }
 	
   function addProduct($title, $description, $price, $categoryId) {
 
